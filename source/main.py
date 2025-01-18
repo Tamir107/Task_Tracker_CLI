@@ -1,4 +1,9 @@
 import argparse
+import os.path
+
+if not os.path.exists('../tasks.json'):
+    with open('../tasks.json','x'):
+        print('New tasks file has been created')
 
 parser = argparse.ArgumentParser(prog='task-cli')
 
@@ -11,7 +16,6 @@ mark_done = subparser.add_parser('mark-done')
 list_command = subparser.add_parser('list')
 
 add.add_argument('task_description', type=str)
-# update.add_argument('task_id','task_description', nargs=2)
 update.add_argument('task_id', type=int)
 update.add_argument('updated_task_description', type=str)
 delete.add_argument('task_id', type=int)
