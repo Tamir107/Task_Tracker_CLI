@@ -1,16 +1,14 @@
 import argparse
 import os.path
 import json
+from task import Task
 
-if not os.path.exists('../tasks.json'):
-    with open('../tasks.json','x') as file:
+json_path = '../tasks.json'
+
+if not os.path.exists(json_path):
+    with open(json_path,'x') as file:
         file.write(json.dumps({}))
         print('New tasks file has been created')
-
-with open('../tasks.json', 'r') as file:
-    data = json.load(file)
-print(data)
-
 
 parser = argparse.ArgumentParser(prog='task-cli')
 
@@ -23,19 +21,21 @@ mark_done = subparser.add_parser('mark-done')
 list_command = subparser.add_parser('list')
 
 add.add_argument('task_description', type=str)
-update.add_argument('task_id', type=int)
+update.add_argument('update_task_id', type=int)
 update.add_argument('updated_task_description', type=str)
-delete.add_argument('task_id', type=int)
-mark_in_progress.add_argument('task_id', type=int)
-mark_done.add_argument('task_id', type=int)
+delete.add_argument('delete_task_id', type=int)
+mark_in_progress.add_argument('mark_in_progress_task_id', type=int)
+mark_done.add_argument('mark_done_task_id', type=int)
 list_command.add_argument('status', default='all',nargs='?', choices=['all','done','todo','in-progress'])
 
 args = parser.parse_args()
 
 if args.command == 'add':
-    print('you added something')
+    Task(args.task_description).add(json_path)
 elif args.command == 'update':
-    print('you updated something')
+    pass
+    # task_to_update = Task(json_path, task_id= args.update_task_id)
+    # task_to_update.update(json_path)
 elif args.command == 'delete':
     print('you deleted something')
 elif args.command == 'mark-in-progress':

@@ -16,7 +16,7 @@ class MyTestCase(unittest.TestCase):
         Task.number_of_tasks = 0
 
     def test_add_new_task(self):
-        task = Task('test', 'To Do')
+        task = Task('test')
         task.add(MyTestCase.dummy_tasks)
         with open(MyTestCase.dummy_tasks, 'r') as file:
             data = json.load(file)
@@ -25,8 +25,8 @@ class MyTestCase(unittest.TestCase):
         print(data)
 
     def test_add_two_tasks(self):
-        task1 = Task('First Task', 'Done')
-        task2 = Task('Second Task', 'In Progress')
+        task1 = Task('First Task')
+        task2 = Task('Second Task')
         task1.add(MyTestCase.dummy_tasks)
         task2.add(MyTestCase.dummy_tasks)
         with open(MyTestCase.dummy_tasks, 'r') as file:
@@ -36,7 +36,7 @@ class MyTestCase(unittest.TestCase):
         print(data)
 
     def test_delete_task(self):
-        task = Task('Test', 'To Do')
+        task = Task('Test')
         task.add(MyTestCase.dummy_tasks)
         with open(MyTestCase.dummy_tasks, 'r') as file:
             data_before_removal = json.load(file)
@@ -54,7 +54,38 @@ class MyTestCase(unittest.TestCase):
 
 
     def test_mark_task(self):
-        pass
+        task = Task('test')
+        task.add(MyTestCase.dummy_tasks)
+        task.mark(MyTestCase.dummy_tasks, 'Done')
+        with open(MyTestCase.dummy_tasks, 'r') as file:
+            data = json.load(file)
+        self.assertEqual(data[task.task_id.__str__()]['status'], 'Done')
+
+
+    def test_list_all_tasks(self):
+        task1 = Task("Test 1")
+        task2 = Task("Test 2")
+        task3 = Task("Test 3")
+        task1.add(MyTestCase.dummy_tasks)
+        task2.add(MyTestCase.dummy_tasks)
+        task2.mark(MyTestCase.dummy_tasks, "Done")
+        task3.add(MyTestCase.dummy_tasks)
+        task3.mark(MyTestCase.dummy_tasks,"In Progress")
+        filtered_tasks = Task.list_tasks(MyTestCase.dummy_tasks)
+        self.assertEqual(len(filtered_tasks), 3)
+
+
+    def test_list_to_do_tasks(self):
+        task1 = Task("Test 1")
+        task2 = Task("Test 2")
+        task3 = Task("Test 3")
+        task1.add(MyTestCase.dummy_tasks)
+        task2.add(MyTestCase.dummy_tasks)
+        task2.mark(MyTestCase.dummy_tasks, "Done")
+        task3.add(MyTestCase.dummy_tasks)
+        task3.mark(MyTestCase.dummy_tasks,"In Progress")
+        filtered_tasks = Task.list_tasks(MyTestCase.dummy_tasks, 'To Do')
+        self.assertEqual(len(filtered_tasks), 1)
 
 
 

@@ -5,10 +5,10 @@ class Task:
 
     number_of_tasks = 0
 
-    def __init__(self, description, status):
-        self.task_id = Task.number_of_tasks
+    def __init__(self, description, task_id=number_of_tasks):
+        self.task_id = task_id
         self.description = description
-        self.status = status
+        self.status = "To Do"
         self.createdAt = datetime.datetime.now().__str__()
         self.updatedAt = datetime.datetime.now().__str__()
         Task.number_of_tasks += 1
@@ -43,3 +43,28 @@ class Task:
                 print(f'Task #{self.task_id} has been removed')
             else:
                 print(f'Task #{self.task_id} does not exist')
+
+    def mark(self, json_path, new_status):
+        with open(json_path, 'r+') as file:
+            data = json.load(file)
+            if self.task_id.__str__() in data.keys():
+                data[self.task_id.__str__()]['status'] = new_status
+                file.seek(0)
+                file.write(json.dumps(data))
+                file.truncate()
+                print(f'Task #{self.task_id} has been marked "{new_status}"')
+            else:
+                print(f'Task #{self.task_id} does not exist')
+
+    @staticmethod
+    def list_tasks(json_path, status='All'):
+        with open(json_path, 'r') as file:
+            data = json.load(file)
+        filtered_tasks = [
+            f'Task #{key}, Description: {value["description"]}, Status: {value["status"]}, Created At: {value["createdAt"]}'
+            f', Updated At: {value["updatedAt"]}'
+            for key, value in data.items()
+            if status == "All" or value['status'] == status
+        ]
+        print(filtered_tasks)
+        return filtered_tasks
