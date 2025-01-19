@@ -1,9 +1,16 @@
 import argparse
 import os.path
+import json
 
 if not os.path.exists('../tasks.json'):
-    with open('../tasks.json','x'):
+    with open('../tasks.json','x') as file:
+        file.write(json.dumps({}))
         print('New tasks file has been created')
+
+with open('../tasks.json', 'r') as file:
+    data = json.load(file)
+print(data)
+
 
 parser = argparse.ArgumentParser(prog='task-cli')
 
