@@ -3,15 +3,12 @@ import json
 
 class Task:
 
-    number_of_tasks = 0
-
-    def __init__(self, description, task_id=number_of_tasks):
+    def __init__(self, description, task_id):
         self.task_id = task_id
         self.description = description
-        self.status = "To Do"
+        self.status = "To_Do"
         self.createdAt = datetime.datetime.now().__str__()
         self.updatedAt = datetime.datetime.now().__str__()
-        Task.number_of_tasks += 1
 
     def add(self, json_path):
         task_data = {
@@ -31,6 +28,18 @@ class Task:
             else:
                 print('There is already a task with that id')
 
+
+    def update(self, json_path, new_description):
+        with open(json_path, 'r+') as file:
+            data = json.load(file)
+            if self.task_id.__str__() in data.keys():
+                data[self.task_id.__str__()]['description'] = new_description
+                file.seek(0)
+                file.write(json.dumps(data))
+                file.truncate()
+                print(f'Task #{self.task_id} has been updated successfully.')
+            else:
+                print(f'Task #{self.task_id} does not exist.')
 
     def remove(self, json_path):
         with open(json_path, 'r+') as file:
